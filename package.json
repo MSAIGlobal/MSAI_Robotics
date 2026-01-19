@@ -1,49 +1,13 @@
+// robotics/package.json
 {
   "name": "mother-robotics-dashboard",
   "version": "1.0.0",
-  "description": "MOTHER Robotics AI Dashboard with 3D CAD, AI Training, and Hardware Control",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "start": "gunicorn src.app:server --bind 0.0.0.0:$PORT --workers 4 --threads 2 --timeout 120",
-    "dev": "python src/main.py",
-    "build": "npm install && pip install -r requirements.txt",
-    "test": "pytest",
-    "lint": "flake8 src/",
-    "format": "black src/ && isort src/",
-    "deploy": "netlify deploy --prod",
-    "build-python": "python -m pip install --upgrade pip && pip install -r requirements.txt"
-  },
-  "keywords": [
-    "robotics",
-    "ai",
-    "dashboard",
-    "cad",
-    "computer-vision",
-    "iot"
-  ],
-  "author": "MediaStream AI",
-  "license": "MIT",
-  "dependencies": {
-    "@plotly/dash": "^2.14.0",
-    "dash-bootstrap-components": "^1.5.0",
-    "dash-daq": "^0.5.0",
-    "flask": "^3.0.0",
-    "flask-socketio": "^5.3.4",
-    "flask-cors": "^4.0.0",
-    "gunicorn": "^21.2.0",
-    "eventlet": "^0.33.3"
-  },
-  "devDependencies": {
-    "netlify-cli": "^15.0.0",
-    "vercel": "^33.0.0"
+    "build": "echo 'Python build handled by Netlify'",
+    "dev": "netlify dev"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "python": "3.10.0",
-    "npm": ">=9.0.0"
-  },
-  "cacheDirectories": [
-    "node_modules",
-    ".pip-cache"
-  ]
+    "node": "18.x"
+  }
 }
