@@ -1,0 +1,92 @@
+# MOTHER Robotics Training Configuration
+
+# Model Configuration
+model:
+  name: "resnet18"  # Options: resnet18, resnet50, mobilenet_v2, faster_rcnn
+  num_classes: 10
+  pretrained: true
+  freeze_backbone: true  # Freeze backbone for transfer learning
+
+# Dataset Configuration
+dataset:
+  name: "coco"  # Options: coco, kitti, waymo, nyu_depth, ycb
+  data_dir: "data/processed"
+  train_split: "train"
+  val_split: "val"
+  image_size: [224, 224]
+  batch_size: 32
+  num_workers: 4
+  shuffle: true
+
+# Data Augmentation
+augmentation:
+  horizontal_flip: true
+  vertical_flip: false
+  rotation_range: 15  # degrees
+  brightness_range: [0.8, 1.2]
+  zoom_range: [0.9, 1.1]
+  normalize: true
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+
+# Training Configuration
+training:
+  epochs: 100
+  optimizer:
+    type: "adam"  # Options: adam, sgd, adamw
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    momentum: 0.9  # For SGD
+
+  scheduler:
+    type: "step"  # Options: step, cosine, plateau
+    step_size: 30
+    gamma: 0.1
+    patience: 10  # For plateau
+
+  loss:
+    type: "cross_entropy"  # Options: cross_entropy, mse, bce
+
+  mixed_precision: false  # Use FP16 mixed precision
+  gradient_clip: 1.0  # Gradient clipping value
+
+# Validation Configuration
+validation:
+  frequency: 1  # Validate every N epochs
+  metrics: ["accuracy", "loss", "precision", "recall"]
+
+# Checkpoint Configuration
+checkpoint:
+  save_frequency: 5  # Save checkpoint every N epochs
+  save_best_only: true
+  monitor: "val_accuracy"  # Metric to monitor for best model
+  mode: "max"  # max or min
+
+# Logging Configuration
+logging:
+  log_dir: "logs"
+  tensorboard: true
+  print_frequency: 10  # Print every N batches
+  save_predictions: false
+
+# Hardware Configuration
+hardware:
+  device: "cuda"  # Options: cuda, cpu
+  gpu_ids: [0]  # List of GPU IDs to use
+  num_gpus: 1
+  distributed: false
+
+# Inference Configuration
+inference:
+  precision: "fp32"  # Options: fp32, fp16, int8
+  batch_size: 1
+  benchmark_iterations: 100
+  export_onnx: true
+  onnx_opset_version: 11
+
+# Paths
+paths:
+  data_root: "data"
+  checkpoint_dir: "checkpoints"
+  output_dir: "outputs"
+  log_dir: "logs"

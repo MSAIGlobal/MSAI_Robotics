@@ -1,0 +1,3 @@
+web: gunicorn src.app:server --bind 0.0.0.0:$PORT --workers 4 --threads 2 --timeout 120
+worker: celery -A src.ai.training worker --loglevel=info
+websocket: python src/api/websocket_server.py
