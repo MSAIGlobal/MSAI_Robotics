@@ -1,10 +1,5 @@
-dash==2.16.1
-dash-bootstrap-components==1.6.0
-Flask==3.0.2
-serverless-wsgi==3.0.4
-requests==2.32.3
-pandas==2.2.2
-plotly==5.22.0
-gunicorn==22.0.0
+dash==2.15.0
+flask==3.0.2
+serverless-wsgi==3.0.2
+requests==2.31.0
 python-dotenv==1.0.1
-dash-table==5.0.0
