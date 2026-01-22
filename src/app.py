@@ -948,4 +948,4 @@ def dt_analyze(_n, last, store):
 if __name__ == "__main__":
     app.run_server(debug=True, port=int(env("PORT", "8050")))
 
-server = app.server
+
