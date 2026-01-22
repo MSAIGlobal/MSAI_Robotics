@@ -72,3 +72,26 @@ The dashboard provides REST API endpoints at `/api/` and WebSocket connections a
 ## License
 
 MIT License - see LICENSE file for details
+
+
+## Netlify Deploy (Fixed)
+
+This repo is configured to deploy the Dash dashboard on **Netlify Functions**.
+
+### Required env vars (Netlify → Site settings → Environment variables)
+- `ENTERPRISE_API_URL` (recommended) and `ENTERPRISE_API_KEY` (x-api-key)
+  - Must have scopes: `mother:llm` and `mother:reasoning`
+- Or set `MOTHER_LLM_URL` and `MOTHER_REASONING_URL` to call model services directly.
+
+Optional:
+- `CAD_RENDER_URL` – backend endpoint to render/convert CAD scripts (e.g., OpenSCAD/FreeCAD → STL)
+- `DIGITAL_TWIN_URL` – backend endpoint to submit simulation jobs
+
+### Local dev
+```bash
+pip install -r requirements-netlify.txt
+python -m src.app
+```
+
+### Netlify build
+Netlify uses `requirements-netlify.txt` for a lightweight serverless build. Heavy GPU/ML deps remain in `requirements-ml.txt`.
