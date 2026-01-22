@@ -510,14 +510,15 @@ def settings_page():
 
 app = dash.Dash(
     __name__,
+    server=server,
+    url_base_pathname="/.netlify/functions/app/",
     external_stylesheets=[dbc.themes.DARKLY, dbc.icons.FONT_AWESOME],
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
     suppress_callback_exceptions=True,
     title=APP_TITLE,
     update_title="Working...",
-    requests_pathname_prefix="/.netlify/functions/app/",
-    routes_pathname_prefix="/.netlify/functions/app/",
 )
+
 
 
 
