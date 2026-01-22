@@ -1,13 +1,9 @@
-// robotics/package.json
 {
   "name": "mother-robotics-dashboard",
   "version": "1.0.0",
   "private": true,
+  "description": "MOTHER Robotics Netlify Dashboard",
   "scripts": {
-    "build": "echo 'Python build handled by Netlify'",
-    "dev": "netlify dev"
-  },
-  "engines": {
-    "node": "18.x"
+    "build": "echo \"no node build\""
   }
 }
