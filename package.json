@@ -1,9 +1,0 @@
-{
-  "name": "mother-robotics-dashboard",
-  "version": "1.0.0",
-  "private": true,
-  "description": "MOTHER Robotics Netlify Dashboard",
-  "scripts": {
-    "build": "echo \"no node build\""
-  }
-}
