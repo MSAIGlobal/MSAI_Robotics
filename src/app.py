@@ -516,7 +516,9 @@ app = dash.Dash(
     title=APP_TITLE,
     update_title="Working...",
     requests_pathname_prefix="/.netlify/functions/app/",
+    routes_pathname_prefix="/.netlify/functions/app/",
 )
+
 
 
 app.layout = dbc.Container(
