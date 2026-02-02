@@ -2,7 +2,6 @@
  * MSAI Robotics Dashboard - Main App
  */
 
-import React from 'react';
 import { Dashboard } from './components/dashboard';
 
 function App() {

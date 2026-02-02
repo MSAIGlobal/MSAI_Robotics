@@ -5,7 +5,6 @@
 
 import { useState, useCallback, useRef } from 'react';
 import type {
-  MotherRoboticsRequest,
   MotherRoboticsResponse,
   ChatMessage,
   RobotState,
@@ -74,13 +73,11 @@ interface ExecutionPlan {
 
 export function useMotherRobotics(options: UseMotherRoboticsOptions = {}): UseMotherRoboticsReturn {
   const {
-    robotId,
     systemPrompt = `You are MOTHER Robotics, an advanced AI assistant specialized in humanoid robot control and coordination.
 You help operators manage robots safely and efficiently. Always prioritize safety and provide clear, actionable guidance.
 When suggesting robot actions, format them as structured commands that can be executed.`,
     maxTokens = 1000,
     temperature = 0.7,
-    streaming = false,
   } = options;
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);

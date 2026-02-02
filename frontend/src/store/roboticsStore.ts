@@ -8,7 +8,6 @@ import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import type {
   RobotState,
   TelemetryPoint,
-  ControlMode,
   SafetyLevel,
   ChatMessage,
   CommandResponse,

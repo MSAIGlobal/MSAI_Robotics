@@ -3,7 +3,7 @@
  * Main robotics dashboard layout
  */
 
-import React, { useEffect } from 'react';
+import type { FC } from 'react';
 import { useRobots } from '../../hooks/useRobots';
 import { useTelemetry } from '../../hooks/useTelemetry';
 import { useRoboticsStore } from '../../store/roboticsStore';
@@ -13,7 +13,7 @@ import { ControlPanel } from './ControlPanel';
 import { MotherChat } from './MotherChat';
 import { roboticsApi } from '../../lib/api';
 
-export const Dashboard: React.FC = () => {
+export const Dashboard: FC = () => {
   const {
     robots,
     selectedRobot,
@@ -27,7 +27,7 @@ export const Dashboard: React.FC = () => {
   const { view, setActivePanel, toggleSidebar, setGridLayout } = useRoboticsStore();
 
   // Telemetry for selected robot
-  const { telemetry, chartData } = useTelemetry({
+  const { telemetry } = useTelemetry({
     robotId: selectedRobot?.robot_id || '',
     autoSubscribe: !!selectedRobot,
   });

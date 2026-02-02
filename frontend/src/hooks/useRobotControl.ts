@@ -4,11 +4,10 @@
  */
 
 import { useState, useCallback, useRef } from 'react';
+import { SafetyLevel, ControlMode, CommandType } from '../types/robotics';
 import type {
-  ControlMode,
   RobotCommand,
   CommandResponse,
-  SafetyLevel
 } from '../types/robotics';
 import { roboticsApi } from '../lib/api';
 import { roboticsWs, type RoboticsEvent } from '../lib/websocket';
@@ -55,7 +54,7 @@ interface UseRobotControlReturn {
 export function useRobotControl(options: UseRobotControlOptions): UseRobotControlReturn {
   const { robotId, useWebSocket = true, commandTimeout = 10000 } = options;
 
-  const [currentMode, setCurrentMode] = useState<ControlMode>('supervised');
+  const [currentMode, setCurrentMode] = useState<ControlMode>(ControlMode.SUPERVISED);
   const [isExecuting, setIsExecuting] = useState(false);
   const [lastCommand, setLastCommand] = useState<RobotCommand | null>(null);
   const [lastResponse, setLastResponse] = useState<CommandResponse | null>(null);
@@ -156,12 +155,12 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
   const emergencyStop = useCallback(async () => {
     try {
       // Set mode first via API
-      await roboticsApi.setControlMode(robotId, 'emergency_stop');
-      setCurrentMode('emergency_stop');
+      await roboticsApi.setControlMode(robotId, ControlMode.EMERGENCY_STOP);
+      setCurrentMode(ControlMode.EMERGENCY_STOP);
 
       // Also send stop command
       await sendCommand({
-        command_type: 'emergency_stop',
+        command_type: CommandType.EMERGENCY_STOP,
         parameters: {},
         priority: 10,
         timeout_ms: 1000,
@@ -179,7 +178,7 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
     duration: number = 1000
   ) => {
     return sendCommand({
-      command_type: 'move',
+      command_type: CommandType.MOVE,
       parameters: { direction, speed, duration_ms: duration },
       priority: 5,
       timeout_ms: duration + 2000,
@@ -189,7 +188,7 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
   const rotate = useCallback(async (angle: number, speed: number = 0.5) => {
     const duration = Math.abs(angle) / speed * 100;
     return sendCommand({
-      command_type: 'rotate',
+      command_type: CommandType.ROTATE,
       parameters: { angle, speed },
       priority: 5,
       timeout_ms: duration + 2000,
@@ -198,7 +197,7 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
 
   const stop = useCallback(async () => {
     return sendCommand({
-      command_type: 'stop',
+      command_type: CommandType.STOP,
       parameters: {},
       priority: 8,
       timeout_ms: 1000,
@@ -207,7 +206,7 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
 
   const goToPosition = useCallback(async (x: number, y: number, z: number = 0) => {
     return sendCommand({
-      command_type: 'go_to_position',
+      command_type: CommandType.GO_TO_POSITION,
       parameters: { x, y, z },
       priority: 5,
       timeout_ms: 30000,
@@ -220,7 +219,7 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
     parameters: Record<string, any> = {}
   ) => {
     return sendCommand({
-      command_type: 'gesture',
+      command_type: CommandType.GESTURE,
       parameters: { gesture_name: gestureName, ...parameters },
       priority: 4,
       timeout_ms: 10000,
@@ -229,7 +228,7 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
 
   const speak = useCallback(async (text: string, voice: string = 'default') => {
     return sendCommand({
-      command_type: 'speak',
+      command_type: CommandType.SPEAK,
       parameters: { text, voice },
       priority: 4,
       timeout_ms: 30000,
@@ -238,7 +237,7 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
 
   const lookAt = useCallback(async (target: { x: number; y: number; z: number }) => {
     return sendCommand({
-      command_type: 'look_at',
+      command_type: CommandType.LOOK_AT,
       parameters: { target },
       priority: 5,
       timeout_ms: 5000,
@@ -247,7 +246,7 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
 
   const grab = useCallback(async (objectId: string) => {
     return sendCommand({
-      command_type: 'grab',
+      command_type: CommandType.GRAB,
       parameters: { object_id: objectId },
       priority: 5,
       timeout_ms: 10000,
@@ -256,7 +255,7 @@ export function useRobotControl(options: UseRobotControlOptions): UseRobotContro
 
   const release = useCallback(async () => {
     return sendCommand({
-      command_type: 'release',
+      command_type: CommandType.RELEASE,
       parameters: {},
       priority: 5,
       timeout_ms: 5000,
@@ -328,8 +327,8 @@ export function useSafetyAlerts(robotId?: string) {
     setAlerts([]);
   }, []);
 
-  const criticalAlerts = alerts.filter(a => a.severity === 'critical');
-  const warningAlerts = alerts.filter(a => a.severity === 'warning');
+  const criticalAlerts = alerts.filter(a => a.severity === SafetyLevel.CRITICAL);
+  const warningAlerts = alerts.filter(a => a.severity === SafetyLevel.WARNING);
 
   return {
     alerts,

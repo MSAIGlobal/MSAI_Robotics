@@ -3,7 +3,8 @@
  * MOTHER AI chat interface for robotics control
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import type { FC, FormEvent } from 'react';
 import type { ChatMessage, RobotState } from '../../types/robotics';
 import { useMotherRobotics } from '../../hooks/useMotherRobotics';
 
@@ -12,7 +13,7 @@ interface MotherChatProps {
   onCommandSuggested?: (command: { type: string; parameters: Record<string, any> }) => void;
 }
 
-export const MotherChat: React.FC<MotherChatProps> = ({
+export const MotherChat: FC<MotherChatProps> = ({
   robotContext,
   onCommandSuggested,
 }) => {
@@ -25,7 +26,6 @@ export const MotherChat: React.FC<MotherChatProps> = ({
     error,
     chat,
     suggestAction,
-    generatePlan,
     clearMessages,
   } = useMotherRobotics({
     robotId: robotContext?.robot_id,
@@ -43,7 +43,7 @@ When suggesting commands, format them clearly so they can be executed.`,
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isThinking) return;
 

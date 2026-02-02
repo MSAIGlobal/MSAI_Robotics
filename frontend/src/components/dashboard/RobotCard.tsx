@@ -3,8 +3,9 @@
  * Displays individual robot status in the dashboard grid
  */
 
-import React from 'react';
-import type { RobotState, ControlMode } from '../../types/robotics';
+import type { FC } from 'react';
+import { ControlMode } from '../../types/robotics';
+import type { RobotState } from '../../types/robotics';
 
 interface RobotCardProps {
   robot: RobotState;
@@ -22,13 +23,13 @@ const statusColors: Record<string, string> = {
 };
 
 const modeIcons: Record<ControlMode, string> = {
-  autonomous: '🤖',
-  supervised: '👁️',
-  teleoperated: '🎮',
-  emergency_stop: '🛑',
+  [ControlMode.AUTONOMOUS]: '🤖',
+  [ControlMode.SUPERVISED]: '👁️',
+  [ControlMode.TELEOPERATED]: '🎮',
+  [ControlMode.EMERGENCY_STOP]: '🛑',
 };
 
-export const RobotCard: React.FC<RobotCardProps> = ({
+export const RobotCard: FC<RobotCardProps> = ({
   robot,
   selected = false,
   onClick,

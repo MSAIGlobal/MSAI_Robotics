@@ -27,18 +27,24 @@ export enum CommandType {
   GESTURE = 'gesture',
   SPEAK = 'speak',
   LOOK = 'look',
+  LOOK_AT = 'look_at',
   GRASP = 'grasp',
+  GRAB = 'grab',
   RELEASE = 'release',
   NAVIGATE = 'navigate',
   FOLLOW = 'follow',
-  INTERACT = 'interact'
+  INTERACT = 'interact',
+  ROTATE = 'rotate',
+  GO_TO_POSITION = 'go_to_position',
+  EMERGENCY_STOP = 'emergency_stop'
 }
 
 export enum SafetyLevel {
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high',
-  CRITICAL = 'critical'
+  CRITICAL = 'critical',
+  WARNING = 'warning'
 }
 
 // ============================================
@@ -168,6 +174,21 @@ export interface CommandResponse {
 // TELEMETRY
 // ============================================
 
+export interface TelemetryMetrics {
+  cpu: number;
+  memory: number;
+  battery: number;
+  temperature: number;
+  gpu: number;
+  network_latency: number;
+  position_x: number;
+  position_y: number;
+  position_z: number;
+  velocity_linear: number;
+  velocity_angular: number;
+  [key: string]: number | undefined;
+}
+
 export interface TelemetryPoint {
   timestamp: string;
   robot_id: string;
@@ -179,6 +200,7 @@ export interface TelemetryPoint {
   gpu_percent: number;
   temperature_c: number;
   network_latency_ms: number;
+  metrics: TelemetryMetrics;
 }
 
 export interface TelemetryStream {
@@ -186,6 +208,11 @@ export interface TelemetryStream {
   buffer_size: number;
   points: TelemetryPoint[];
   latest: TelemetryPoint | null;
+}
+
+export interface TelemetryChartData {
+  timestamps: Date[];
+  series: Record<string, (number | null)[]>;
 }
 
 // ============================================
@@ -248,6 +275,13 @@ export interface MotherRoboticsMessage {
   timestamp?: string;
 }
 
+// ChatMessage is used by hooks and components for chat UI
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp: Date | string;
+}
+
 export interface MotherRoboticsRequest {
   messages: MotherRoboticsMessage[];
   robot_context?: {
@@ -260,7 +294,8 @@ export interface MotherRoboticsRequest {
 }
 
 export interface MotherRoboticsResponse {
-  message: MotherRoboticsMessage;
+  message?: MotherRoboticsMessage;
+  response?: string;
   suggested_commands?: RobotCommand[];
   safety_warnings?: string[];
 }

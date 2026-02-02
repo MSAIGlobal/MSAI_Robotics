@@ -3,7 +3,8 @@
  * Real-time telemetry visualization using Recharts
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FC } from 'react';
 import {
   LineChart,
   Line,
@@ -40,7 +41,7 @@ const defaultColors: Record<string, string> = {
   position_z: '#f97316',  // orange
 };
 
-export const TelemetryChart: React.FC<TelemetryChartProps> = ({
+export const TelemetryChart: FC<TelemetryChartProps> = ({
   data,
   metrics,
   title,
@@ -84,8 +85,71 @@ export const TelemetryChart: React.FC<TelemetryChartProps> = ({
     return [Math.floor(min - padding), Math.ceil(max + padding)];
   }, [chartData, metrics]);
 
-  const Chart = chartType === 'area' ? AreaChart : LineChart;
-  const DataComponent = chartType === 'area' ? Area : Line;
+  const renderDataComponents = () => {
+    return metrics.map((metric) =>
+      chartType === 'area' ? (
+        <Area
+          key={metric}
+          type="monotone"
+          dataKey={metric}
+          stroke={colors[metric] || '#fff'}
+          fill={colors[metric] || '#fff'}
+          fillOpacity={0.2}
+          strokeWidth={2}
+          dot={false}
+          activeDot={{ r: 4 }}
+          name={metric.replace('_', ' ')}
+        />
+      ) : (
+        <Line
+          key={metric}
+          type="monotone"
+          dataKey={metric}
+          stroke={colors[metric] || '#fff'}
+          strokeWidth={2}
+          dot={false}
+          activeDot={{ r: 4 }}
+          name={metric.replace('_', ' ')}
+        />
+      )
+    );
+  };
+
+  const chartContent = (
+    <>
+      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+      <XAxis
+        dataKey="time"
+        stroke="#9ca3af"
+        fontSize={10}
+        tickLine={false}
+        interval="preserveStartEnd"
+      />
+      <YAxis
+        stroke="#9ca3af"
+        fontSize={10}
+        tickLine={false}
+        domain={yDomain}
+        width={40}
+      />
+      <Tooltip
+        contentStyle={{
+          backgroundColor: '#1f2937',
+          border: '1px solid #374151',
+          borderRadius: '8px',
+        }}
+        labelStyle={{ color: '#9ca3af' }}
+        itemStyle={{ color: '#fff' }}
+      />
+      {showLegend && (
+        <Legend
+          wrapperStyle={{ fontSize: '12px' }}
+          iconType="line"
+        />
+      )}
+      {renderDataComponents()}
+    </>
+  );
 
   return (
     <div className="bg-gray-800 rounded-lg p-4">
@@ -94,53 +158,11 @@ export const TelemetryChart: React.FC<TelemetryChartProps> = ({
       )}
 
       <ResponsiveContainer width="100%" height={height}>
-        <Chart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-          <XAxis
-            dataKey="time"
-            stroke="#9ca3af"
-            fontSize={10}
-            tickLine={false}
-            interval="preserveStartEnd"
-          />
-          <YAxis
-            stroke="#9ca3af"
-            fontSize={10}
-            tickLine={false}
-            domain={yDomain}
-            width={40}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: '#1f2937',
-              border: '1px solid #374151',
-              borderRadius: '8px',
-            }}
-            labelStyle={{ color: '#9ca3af' }}
-            itemStyle={{ color: '#fff' }}
-          />
-          {showLegend && (
-            <Legend
-              wrapperStyle={{ fontSize: '12px' }}
-              iconType="line"
-            />
-          )}
-
-          {metrics.map((metric) => (
-            <DataComponent
-              key={metric}
-              type="monotone"
-              dataKey={metric}
-              stroke={colors[metric] || '#fff'}
-              fill={chartType === 'area' ? colors[metric] || '#fff' : undefined}
-              fillOpacity={chartType === 'area' ? 0.2 : undefined}
-              strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 4 }}
-              name={metric.replace('_', ' ')}
-            />
-          ))}
-        </Chart>
+        {chartType === 'area' ? (
+          <AreaChart data={chartData}>{chartContent}</AreaChart>
+        ) : (
+          <LineChart data={chartData}>{chartContent}</LineChart>
+        )}
       </ResponsiveContainer>
     </div>
   );
@@ -155,7 +177,7 @@ interface BatteryGaugeProps {
   size?: number;
 }
 
-export const BatteryGauge: React.FC<BatteryGaugeProps> = ({ level, size = 100 }) => {
+export const BatteryGauge: FC<BatteryGaugeProps> = ({ level, size = 100 }) => {
   const color = level > 50 ? '#10b981' : level > 20 ? '#f59e0b' : '#ef4444';
   const rotation = (level / 100) * 180;
 
@@ -201,7 +223,7 @@ interface StatusIndicatorProps {
   criticalThreshold?: number;
 }
 
-export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
+export const StatusIndicator: FC<StatusIndicatorProps> = ({
   label,
   value,
   unit = '',

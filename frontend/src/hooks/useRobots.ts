@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { RobotState, RobotStatus, ControlMode } from '../types/robotics';
+import type { RobotState, RobotStatus } from '../types/robotics';
 import { roboticsApi } from '../lib/api';
 import { roboticsWs, type RoboticsEvent } from '../lib/websocket';
 

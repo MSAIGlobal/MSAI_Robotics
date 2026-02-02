@@ -3,8 +3,10 @@
  * Robot control interface with movement and action commands
  */
 
-import React, { useState } from 'react';
-import type { RobotState, ControlMode } from '../../types/robotics';
+import { useState } from 'react';
+import type { FC } from 'react';
+import { ControlMode } from '../../types/robotics';
+import type { RobotState } from '../../types/robotics';
 import { useRobotControl } from '../../hooks/useRobotControl';
 
 interface ControlPanelProps {
@@ -12,7 +14,7 @@ interface ControlPanelProps {
   onModeChange?: (mode: ControlMode) => void;
 }
 
-export const ControlPanel: React.FC<ControlPanelProps> = ({
+export const ControlPanel: FC<ControlPanelProps> = ({
   robot,
   onModeChange,
 }) => {
@@ -81,7 +83,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       <div className="mb-4">
         <label className="text-sm text-gray-400 mb-2 block">Control Mode</label>
         <div className="grid grid-cols-2 gap-2">
-          {(['autonomous', 'supervised', 'teleoperated'] as ControlMode[]).map((mode) => (
+          {[ControlMode.AUTONOMOUS, ControlMode.SUPERVISED, ControlMode.TELEOPERATED].map((mode) => (
             <button
               key={mode}
               onClick={() => handleModeChange(mode)}
