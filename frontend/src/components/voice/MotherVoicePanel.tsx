@@ -1,5 +1,5 @@
 // MOTHER Voice Panel - Text to Speech integration
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { voiceApi } from '../../lib/backend';
 import { User } from '../../lib/types';
 import { hasPermission } from '../../lib/auth';

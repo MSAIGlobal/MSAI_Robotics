@@ -1,5 +1,5 @@
 // Motion Control Panel - Simulation controls
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { roboticsApi, createSimulationStream } from '../../lib/backend';
 import { SimulationConfig, SimulationState, MotionSession, User } from '../../lib/types';
 import { hasPermission } from '../../lib/auth';

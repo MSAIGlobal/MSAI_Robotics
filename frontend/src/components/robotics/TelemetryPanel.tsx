@@ -1,5 +1,5 @@
 // Telemetry & Safety Panel - Real-time data from NODE
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { SimulationState } from '../../lib/types';
 
 interface Props {

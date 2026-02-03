@@ -1,8 +1,8 @@
 // EXO-1 CAD Viewer - 3D humanoid skeleton visualization
 'use client';
-import React, { useRef, useEffect, useState, Suspense } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Grid, Environment } from '@react-three/drei';
+import { useRef, useEffect, useState, Suspense } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Grid } from '@react-three/drei';
 import * as THREE from 'three';
 import { roboticsApi } from '../../lib/backend';
 import { CadModel, JointSpec, SimulationState } from '../../lib/types';
@@ -78,8 +78,13 @@ function Bone({
     (start[2] + end[2]) / 2
   );
 
+  // Calculate rotation to align cylinder with direction
+  const quaternion = new THREE.Quaternion();
+  const up = new THREE.Vector3(0, 1, 0);
+  quaternion.setFromUnitVectors(up, direction.clone().normalize());
+
   return (
-    <mesh position={position} lookAt={new THREE.Vector3(...end)}>
+    <mesh position={position} quaternion={quaternion}>
       <cylinderGeometry args={[0.015, 0.02, length, 8]} />
       <meshStandardMaterial color="#334155" metalness={0.8} roughness={0.2} />
     </mesh>
@@ -188,8 +193,8 @@ function HumanoidSkeleton({
 
 // Main CAD Viewer component
 export function CadViewer({ modelId, simulationState, showConstraints = true }: Props) {
-  const [model, setModel] = useState<CadModel | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [_model, setModel] = useState<CadModel | null>(null);
+  const [_loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (modelId) {

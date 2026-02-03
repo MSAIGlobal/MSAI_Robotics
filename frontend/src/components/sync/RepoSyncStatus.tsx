@@ -1,5 +1,5 @@
 // Repo Sync Status Panel - Frontend ↔ Backend sync
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { syncApi } from '../../lib/backend';
 import { RepoSyncStatus as SyncStatus } from '../../lib/types';
 

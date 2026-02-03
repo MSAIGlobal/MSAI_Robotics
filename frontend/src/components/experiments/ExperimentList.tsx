@@ -1,5 +1,5 @@
 // Experiment List - View all experiments
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { experimentsApi } from '../../lib/backend';
 import { Experiment, User } from '../../lib/types';
 import { hasPermission } from '../../lib/auth';

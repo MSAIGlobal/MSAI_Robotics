@@ -1,21 +1,18 @@
 // Electronics & Actuation Panel - Motor configs, sensors, power
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { roboticsApi } from '../../lib/backend';
 import { MotorConfig, SensorConfig, User } from '../../lib/types';
-import { hasPermission } from '../../lib/auth';
 
 interface Props {
   modelId: string;
   user: User | null;
 }
 
-export function ElectronicsPanel({ modelId, user }: Props) {
+export function ElectronicsPanel({ modelId, user: _user }: Props) {
   const [motors, setMotors] = useState<MotorConfig[]>([]);
   const [sensors, setSensors] = useState<SensorConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'motors' | 'sensors'>('motors');
-
-  const canEdit = hasPermission('robotics.control', user);
 
   useEffect(() => {
     loadData();

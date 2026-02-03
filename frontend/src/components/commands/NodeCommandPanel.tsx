@@ -1,5 +1,5 @@
 // Node Command Panel - Whitelisted command execution
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { commandsApi } from '../../lib/backend';
 import { NodeCommand, CommandExecution, User } from '../../lib/types';
 import { hasPermission } from '../../lib/auth';
