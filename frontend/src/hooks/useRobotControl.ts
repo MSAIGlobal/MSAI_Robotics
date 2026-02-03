@@ -313,7 +313,7 @@ export function useSafetyAlerts(robotId?: string) {
 
     setAlerts(prev => [...prev.slice(-99), {
       ...event.data,
-      timestamp: event.timestamp,
+      timestamp: new Date(event.timestamp),
     }]);
   }, [robotId]);
 
