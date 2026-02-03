@@ -3,7 +3,8 @@
   publish = "frontend/dist"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
+  NPM_VERSION = "10"
 
 [functions]
   directory = "netlify/functions"
