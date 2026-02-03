@@ -2,7 +2,7 @@
 // Code generation, memory, file management, repository integration
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 // Types
 interface CodeFile {
@@ -85,18 +85,6 @@ export function MotherCODEShell({
     }
 
     return blocks;
-  };
-
-  // Detect language from file extension
-  const detectLanguage = (path: string): string => {
-    const ext = path.split('.').pop()?.toLowerCase();
-    const langMap: Record<string, string> = {
-      ts: 'typescript', tsx: 'typescript', js: 'javascript', jsx: 'javascript',
-      py: 'python', rs: 'rust', go: 'go', java: 'java', rb: 'ruby',
-      css: 'css', scss: 'scss', html: 'html', json: 'json', md: 'markdown',
-      sql: 'sql', sh: 'bash', yml: 'yaml', yaml: 'yaml',
-    };
-    return langMap[ext || ''] || 'text';
   };
 
   // Send coding request

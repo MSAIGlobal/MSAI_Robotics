@@ -3,7 +3,7 @@
 // Images, Videos, Audio, Effects - Full production pipeline
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Types
 interface ContentUID {

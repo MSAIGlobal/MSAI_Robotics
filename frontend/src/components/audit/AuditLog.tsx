@@ -1,5 +1,5 @@
 // Immutable Audit Log with Export
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { auditApi } from '../../lib/backend';
 import { AuditEvent, User, Role } from '../../lib/types';
 import { hasPermission } from '../../lib/auth';

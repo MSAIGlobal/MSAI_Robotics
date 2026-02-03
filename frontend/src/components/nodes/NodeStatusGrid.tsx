@@ -1,5 +1,5 @@
 // Multi-Node Status Grid
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { nodesApi, createTelemetryStream } from '../../lib/backend';
 import { NodeStatus } from '../../lib/types';
 

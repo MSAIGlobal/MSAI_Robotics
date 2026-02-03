@@ -1,5 +1,5 @@
 // MOTHER EXO-1 Robotics Dashboard - Complete multi-panel layout
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CadViewer } from '../components/robotics/CadViewer';
 import { ElectronicsPanel } from '../components/robotics/ElectronicsPanel';
 import { ControlPanel } from '../components/robotics/ControlPanel';

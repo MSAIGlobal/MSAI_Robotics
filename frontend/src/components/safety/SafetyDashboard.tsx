@@ -1,5 +1,5 @@
 // Safety & Kill-Switch Dashboard
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { safetyApi, nodesApi, experimentsApi } from '../../lib/backend';
 import { User, NodeStatus, Experiment } from '../../lib/types';
 import { hasPermission } from '../../lib/auth';

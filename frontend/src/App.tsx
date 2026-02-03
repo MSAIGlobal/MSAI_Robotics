@@ -3,7 +3,7 @@
  * Control Plane for MOTHER Robotics Systems
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Dashboard } from './components/dashboard';
 import { Exo1Dashboard } from './pages/Exo1Dashboard';
 import { SafetyDashboard } from './components/safety/SafetyDashboard';
