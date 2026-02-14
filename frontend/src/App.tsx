@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { Dashboard } from './components/dashboard';
 import { Exo1Dashboard } from './pages/Exo1Dashboard';
+import { DigitalTwinDashboard } from './pages/DigitalTwinDashboard';
 import { SafetyDashboard } from './components/safety/SafetyDashboard';
 import { ExperimentLaunchForm } from './components/experiments/ExperimentLaunchForm';
 import { ExperimentList } from './components/experiments/ExperimentList';
@@ -15,7 +16,7 @@ import { AuditLog } from './components/audit/AuditLog';
 import { User } from './lib/types';
 import { getStoredAuth, storeAuth, initNetlifyIdentity, openLogin, logout } from './lib/auth';
 
-type View = 'dashboard' | 'robotics' | 'experiments' | 'datasets' | 'nodes' | 'safety' | 'audit';
+type View = 'dashboard' | 'digital-twin' | 'robotics' | 'experiments' | 'datasets' | 'nodes' | 'safety' | 'audit';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -67,6 +68,7 @@ function App() {
             <div className="flex items-center gap-1">
               {[
                 { id: 'dashboard', label: 'Dashboard' },
+                { id: 'digital-twin', label: 'Digital Twin' },
                 { id: 'robotics', label: 'EXO-1' },
                 { id: 'experiments', label: 'Experiments' },
                 { id: 'datasets', label: 'Datasets' },
@@ -126,6 +128,8 @@ function App() {
       {/* Main Content */}
       <main className="max-w-[1920px] mx-auto">
         {currentView === 'dashboard' && <Dashboard />}
+
+        {currentView === 'digital-twin' && <DigitalTwinDashboard user={user} />}
 
         {currentView === 'robotics' && <Exo1Dashboard user={user} />}
 

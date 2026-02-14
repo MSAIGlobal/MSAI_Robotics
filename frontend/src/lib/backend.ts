@@ -240,6 +240,167 @@ export const syncApi = {
 };
 
 // ============================================
+// INFERENCE API
+// ============================================
+
+export const inferenceApi = {
+  chat: (request: {
+    model: string;
+    messages: { role: string; content: string }[];
+    config: {
+      temperature: number;
+      max_tokens: number;
+      system_prompt: string;
+      use_mother_core: boolean;
+      use_groot_n1: boolean;
+      use_memory: boolean;
+      sovereignty_mode: boolean;
+    };
+  }) =>
+    apiCall<{ content: string; latency_ms: number; tokens: number; reasoning_path?: string[] }>(
+      '/inference/chat',
+      { method: 'POST', body: JSON.stringify(request) }
+    ),
+
+  models: () =>
+    apiCall<{ id: string; name: string; type: string; status: string }[]>('/inference/models'),
+
+  status: () =>
+    apiCall<{ connected: boolean; active_sessions: number; gpu_utilization: number }>('/inference/status'),
+};
+
+// ============================================
+// TMUX API
+// ============================================
+
+export const tmuxApi = {
+  sessions: () =>
+    apiCall<{ id: string; name: string; status: string; windows: number; created: string }[]>('/tmux/sessions'),
+
+  execute: (sessionId: string, command: string) =>
+    apiCall<{ output: string; exit_code: number }>(`/tmux/${sessionId}/execute`, {
+      method: 'POST',
+      body: JSON.stringify({ command }),
+    }),
+
+  createSession: (name: string) =>
+    apiCall<{ id: string; name: string }>('/tmux/sessions', {
+      method: 'POST',
+      body: JSON.stringify({ name }),
+    }),
+
+  killSession: (sessionId: string) =>
+    apiCall<void>(`/tmux/${sessionId}`, { method: 'DELETE' }),
+};
+
+// ============================================
+// 3D PRINTING API
+// ============================================
+
+export const printingApi = {
+  // Printers
+  listPrinters: () =>
+    apiCall<{
+      id: string;
+      name: string;
+      model: string;
+      status: string;
+      progress: number;
+      temperature_bed: number;
+      temperature_nozzle: number;
+      ip_address: string;
+      connected: boolean;
+    }[]>('/printing/printers'),
+
+  connectPrinter: (printerId: string) =>
+    apiCall<void>(`/printing/printers/${printerId}/connect`, { method: 'POST' }),
+
+  disconnectPrinter: (printerId: string) =>
+    apiCall<void>(`/printing/printers/${printerId}/disconnect`, { method: 'POST' }),
+
+  // Jobs
+  listJobs: () =>
+    apiCall<{
+      id: string;
+      name: string;
+      printer_id: string;
+      status: string;
+      progress: number;
+      estimated_time: number;
+      elapsed_time: number;
+      material: string;
+      weight_g: number;
+    }[]>('/printing/jobs'),
+
+  submitJob: (printerId: string, gcode: string, name: string) =>
+    apiCall<{ job_id: string }>('/printing/jobs', {
+      method: 'POST',
+      body: JSON.stringify({ printer_id: printerId, gcode, name }),
+    }),
+
+  cancelJob: (jobId: string) =>
+    apiCall<void>(`/printing/jobs/${jobId}/cancel`, { method: 'POST' }),
+
+  // CAD
+  buildCAD: (code: string) =>
+    apiCall<{ primitives: any[]; stl_url?: string; errors: string[] }>('/printing/cad/build', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    }),
+};
+
+// ============================================
+// ELECTRONICS API
+// ============================================
+
+export const electronicsApi = {
+  saveCircuit: (project: { name: string; components: any[]; wires: any[]; blocks: any[] }) =>
+    apiCall<{ id: string }>('/electronics/circuits', {
+      method: 'POST',
+      body: JSON.stringify(project),
+    }),
+
+  listCircuits: () =>
+    apiCall<{ id: string; name: string; created_at: string; component_count: number }[]>('/electronics/circuits'),
+
+  getCircuit: (id: string) =>
+    apiCall<any>(`/electronics/circuits/${id}`),
+
+  exportCircuit: (id: string, format: 'kicad' | 'eagle' | 'gerber' | 'bom' | 'spice' | 'json') =>
+    apiCall<{ url: string }>(`/electronics/circuits/${id}/export?format=${format}`),
+};
+
+// ============================================
+// CONVERGENCE API
+// ============================================
+
+export const convergenceApi = {
+  status: () =>
+    apiCall<{
+      mother_status: string;
+      groot_status: string;
+      bridge_latency_ms: number;
+      integration_layers: { name: string; status: string }[];
+      sovereignty_score: number;
+    }>('/convergence/status'),
+
+  sovereigntyChecks: () =>
+    apiCall<{ id: string; name: string; status: string; details: string }[]>('/convergence/sovereignty'),
+
+  skillLibrary: () =>
+    apiCall<{ id: string; name: string; category: string; verified: boolean; compliance: string[] }[]>('/convergence/skills'),
+
+  graphQuery: (cypher: string) =>
+    apiCall<{ nodes: any[]; relations: any[] }>('/convergence/graph/query', {
+      method: 'POST',
+      body: JSON.stringify({ query: cypher }),
+    }),
+
+  trainingPipelines: () =>
+    apiCall<{ id: string; name: string; status: string; progress: number; framework: string }[]>('/convergence/training'),
+};
+
+// ============================================
 // WEBSOCKET STREAMING
 // ============================================
 
@@ -276,6 +437,49 @@ export function createTelemetryStream(
     try {
       const status = JSON.parse(event.data) as NodeStatus;
       onUpdate(status);
+    } catch (e) {
+      onError(e as Error);
+    }
+  };
+
+  ws.onerror = () => onError(new Error('WebSocket error'));
+
+  return ws;
+}
+
+export function createInferenceStream(
+  onToken: (data: { type: string; token?: string; latency_ms?: number; tokens?: number; reasoning_path?: string[] }) => void,
+  onError: (error: Error) => void
+): WebSocket {
+  const wsUrl = BACKEND_URL.replace('http', 'ws') + '/inference/stream';
+  const ws = new WebSocket(wsUrl);
+
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      onToken(data);
+    } catch (e) {
+      onError(e as Error);
+    }
+  };
+
+  ws.onerror = () => onError(new Error('WebSocket error'));
+
+  return ws;
+}
+
+export function createTmuxStream(
+  sessionId: string,
+  onOutput: (data: { type: string; content: string; stream?: string }) => void,
+  onError: (error: Error) => void
+): WebSocket {
+  const wsUrl = BACKEND_URL.replace('http', 'ws') + `/tmux/${sessionId}/stream`;
+  const ws = new WebSocket(wsUrl);
+
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      onOutput(data);
     } catch (e) {
       onError(e as Error);
     }
