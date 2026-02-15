@@ -7,6 +7,7 @@ import { PrintingWorkbench } from '../components/digital-twin/PrintingWorkbench'
 import { CircuitDesigner } from '../components/digital-twin/CircuitDesigner';
 import { MotherCoderPanel } from '../components/digital-twin/MotherCoderPanel';
 import { ConvergenceHub } from '../components/digital-twin/ConvergenceHub';
+import { VisionFlowPanel } from '../components/digital-twin/VisionFlowPanel';
 import { CadViewer } from '../components/robotics/CadViewer';
 import { ControlPanel } from '../components/robotics/ControlPanel';
 import { TelemetryPanel } from '../components/robotics/TelemetryPanel';
@@ -14,7 +15,7 @@ import { ElectronicsPanel } from '../components/robotics/ElectronicsPanel';
 import { RepoSyncStatus } from '../components/sync/RepoSyncStatus';
 import { SimulationState, User } from '../lib/types';
 
-type Section = 'twin' | 'inference' | 'tmux' | 'printing' | 'electronics' | 'coder' | 'convergence';
+type Section = 'twin' | 'visionflow' | 'inference' | 'tmux' | 'printing' | 'electronics' | 'coder' | 'convergence';
 
 interface Props {
   user: User | null;
@@ -22,6 +23,7 @@ interface Props {
 
 const SECTIONS: { id: Section; label: string; color: string }[] = [
   { id: 'twin', label: 'Digital Twin', color: 'cyan' },
+  { id: 'visionflow', label: 'VisionFlow', color: 'indigo' },
   { id: 'inference', label: 'Inference', color: 'blue' },
   { id: 'tmux', label: 'TMUX Terminal', color: 'green' },
   { id: 'printing', label: '3D Printing', color: 'orange' },
@@ -39,6 +41,7 @@ function getSectionColor(color: string, active: boolean): string {
     case 'orange': return 'bg-orange-500/20 text-orange-400';
     case 'purple': return 'bg-purple-500/20 text-purple-400';
     case 'emerald': return 'bg-emerald-500/20 text-emerald-400';
+    case 'indigo': return 'bg-indigo-500/20 text-indigo-400';
     default: return 'bg-cyan-500/20 text-cyan-400';
   }
 }
@@ -195,6 +198,9 @@ function renderSection(
           </div>
         </div>
       );
+
+    case 'visionflow':
+      return <VisionFlowPanel />;
 
     case 'inference':
       return <InferencePanel />;
